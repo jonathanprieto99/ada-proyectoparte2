@@ -39,6 +39,9 @@ def upload_image():
             im = Image.open(filepath)
             np_im = numpy.array(im)
             print(np_im)
+            file1 = open("array.txt", "a")
+            file1.write(str(np_im))
+            file1.close()
             return render_template("index.html", filename=filepath)
 
     return render_template("index.html", filename=filepath)
