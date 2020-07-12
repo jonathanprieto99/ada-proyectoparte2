@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reconocedor Facial</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.4/cldr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.4/cldr/event.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.4/cldr/supplemental.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.4/cldr/unresolved.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.1.1/globalize/message.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.1.1/globalize/number.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.1.1/globalize/currency.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.1.1/globalize/date.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.light.css" />
+    <script src="https://cdn3.devexpress.com/jslib/20.1.4/js/dx.all.js"></script>
+    <script src="/static/js/data.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+    <script src="/static/js/index.js"></script>
+    <link rel="icon" href="/static/Favicon/favicon-16x16.png" type="image/gif" sizes="16x16">
+</head>
+<body class="dx-viewport">
+
+<h1>¡Cargar una foto e ingresar la cantidad de resultados deseados!</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="file"><br>
+      Ingrear numero de resultados deseados: <input type="number" name="k">
+      <input type="submit" value="Cargar">
+    </form>
+
+<h1>¡Resultados!</h1>
+
+    <div class="demo-container">
+        <h2>Imagen subida:</h2>
+        {% if filename != "no" %}
+            <img style="height: 25%; width: 25%;" src={{ filename }}>
+
+        {% else %}
+            <h4>¡Subir Imagen!</h4>
+        {% endif %}
+        <h2>Ultimos Resultados:</h2>
+        <div id="gallery"></div>
+    </div>
+
+</body>
+</html>
