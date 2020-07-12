@@ -3,6 +3,9 @@ import os
 from werkzeug.utils import secure_filename
 from PIL import Image
 import numpy
+import sys
+
+numpy.set_printoptions(threshold=sys.maxsize)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
