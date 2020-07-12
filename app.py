@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, render_template, Response
 import os
 from werkzeug.utils import secure_filename
+from PIL import Image
+import numpy
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -34,6 +36,9 @@ def upload_image():
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
+            im = Image.open(filepath)
+            np_im = numpy.array(im)
+            print(np_im)
             return render_template("index.html", filename=filepath)
 
     return render_template("index.html", filename=filepath)
