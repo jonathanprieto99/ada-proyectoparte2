@@ -26,8 +26,6 @@ def upload_image():
 
         file = request.files['file']
         print("File: "+file.filename)
-        k = request.form['k']
-        print("K: "+k)
 
         if file.filename == '':
             return redirect(request.url)
