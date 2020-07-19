@@ -27,19 +27,24 @@
 
 <h1>¡Cargar una foto!</h1>
     <form method="POST" enctype="multipart/form-data">
+      <h2>Imagen1</h2>
       <input type="file" name="file"><br>
+      <h2>Imagen2</h2>
+      <input type="file" name="file2"><br>
+        <br>
       <input type="submit" value="Cargar">
     </form>
 
 <h1>¡Resultados!</h1>
 
     <div class="demo-container">
-        <h2>Imagen subida:</h2>
-        {% if filename != "no" %}
+        <h2>Imagenes subidas:</h2>
+        {% if filename != "no" and filename2 != "no" %}
             <img style="height: 25%; width: 25%;" src={{ filename }}>
+            <img style="height: 25%; width: 25%;" src={{ filename2 }}>
 
         {% else %}
-            <h4>¡Subir Imagen!</h4>
+            <h4>¡Subir Imagenes!</h4>
         {% endif %}
         <h2>Ultimos Resultados:</h2>
         <div id="gallery"></div>
