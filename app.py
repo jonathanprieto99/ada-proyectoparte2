@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, Response
+from flask import Flask, request, redirect, render_template
 import os
 from werkzeug.utils import secure_filename
 from PIL import Image
