@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 #app.secret_key = os.environ.get('SECRET_KEY')
 #app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER')
+#app.config['GIF_FOLDER'] = os.environ.get('GIF_FOLDER')
 
 app.secret_key = "SECRETKEYFORGUTECIMAGE"
 app.config['UPLOAD_FOLDER'] = "static/upload"
