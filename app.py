@@ -23,14 +23,17 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def generate_gif(directory):
-    img1 = Image.open(directory+"Pregunta1.jpeg")
-    img2 = Image.open(directory+"Pregunta2.jpeg")
-    img3 = Image.open(directory+"Pregunta3.jpeg")
-    img4 = Image.open(directory+"Pregunta4.jpeg")
+
+    files = os.listdir(directory)
+    array = []
+
+    for file in files:
+        img1 = Image.open(file)
+        array=array.append(img1)
 
     gif = Image.new('RGB', (200, 200), (255, 255, 255))
 
-    gif.save(directory+'out.gif', save_all=True, append_images=[img1, img2, img3, img4], loop=0)
+    gif.save(directory+'out.gif', save_all=True, append_images=array, loop=0)
 
     return directory+'out.gif'
 
