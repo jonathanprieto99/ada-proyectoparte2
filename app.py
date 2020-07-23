@@ -31,10 +31,10 @@ def generate_gif(directory):
         if "gif" in file:
             print("Pasar")
         else:
-            img1 = Image.open(file)
-            array=array.append(img1)
+            img1 = Image.open(directory+file)
+            array.append(img1)
 
-    gif = Image.new('RGB', (200, 200), (255, 255, 255))
+    gif = Image.new('RGB', (400, 600))
 
     gif.save(directory+'out.gif', save_all=True, append_images=array, loop=0)
 
