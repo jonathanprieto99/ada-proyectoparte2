@@ -16,15 +16,29 @@ app = Flask(__name__)
 
 app.secret_key = "SECRETKEYFORGUTECIMAGE"
 app.config['UPLOAD_FOLDER'] = "static/upload"
+app.config['GIF_FOLDER'] = "static/GIF_FOLDER/"
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def generate_gif(directory):
+    img1 = Image.open(directory+"Pregunta1.jpeg")
+    img2 = Image.open(directory+"Pregunta2.jpeg")
+    img3 = Image.open(directory+"Pregunta3.jpeg")
+    img4 = Image.open(directory+"Pregunta4.jpeg")
+
+    gif = Image.new('RGB', (200, 200), (255, 255, 255))
+
+    gif.save(directory+'out.gif', save_all=True, append_images=[img1, img2, img3, img4], loop=0)
+
+    return directory+'out.gif'
+
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_image():
     filepath = "no"
+    gif = "no"
     if request.method == 'POST':
         if 'file' not in request.files or 'file2' not in request.files:
             return redirect(request.url)
@@ -66,9 +80,11 @@ def upload_image():
             file2.write(str(np_im2))
             file2.close()
 
-            return render_template("index.html", filename=filepath, filename2=filepath2)
+            gif = generate_gif(app.config['GIF_FOLDER'])
 
-    return render_template("index.html", filename=filepath)
+            return render_template("index.html", filename=filepath, filename2=filepath2, gif=gif)
+
+    return render_template("index.html", filename=filepath, gif=gif)
 
 
 if __name__ == '__main__':

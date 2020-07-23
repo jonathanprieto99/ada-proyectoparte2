@@ -39,15 +39,26 @@
 
     <div class="demo-container">
         <h2>Imagenes subidas:</h2>
+
         {% if filename != "no" and filename2 != "no" %}
             <img style="height: 25%; width: 25%;" src={{ filename }}>
             <img style="height: 25%; width: 25%;" src={{ filename2 }}>
 
         {% else %}
             <h4>¡Subir Imagenes!</h4>
+
         {% endif %}
+
         <h2>Ultimos Resultados:</h2>
-        <div id="gallery"></div>
+
+        {% if gif != "no" %}
+            <div id="gallery"><img style="height: 25%; width: 25%;" src={{ gif }}></div>
+
+        {% else %}
+            <h4>¡No hay resultado aún!</h4>
+
+        {% endif %}
+
     </div>
 
 </body>
