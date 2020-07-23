@@ -28,8 +28,11 @@ def generate_gif(directory):
     array = []
 
     for file in files:
-        img1 = Image.open(file)
-        array=array.append(img1)
+        if "gif" in file:
+            print("Pasar")
+        else:
+            img1 = Image.open(file)
+            array=array.append(img1)
 
     gif = Image.new('RGB', (200, 200), (255, 255, 255))
 
