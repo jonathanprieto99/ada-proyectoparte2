@@ -49,10 +49,30 @@
 
         {% endif %}
 
-        <h2>Animación:</h2>
+        <h2>Animación GREEDY:</h2>
 
-        {% if gif != "no" %}
-            <img style="height: 40%; width: 40%;" src={{ gif }}>
+        {% if gif1 != "no" %}
+            <img style="height: 40%; width: 40%;" src={{ gif1 }}>
+
+        {% else %}
+            <h4>¡No hay resultado aún!</h4>
+
+        {% endif %}
+
+        <h2>Animación ProgDinamica 1:</h2>
+
+        {% if gif2 != "no" %}
+            <img style="height: 40%; width: 40%;" src={{ gif2 }}>
+
+        {% else %}
+            <h4>¡No hay resultado aún!</h4>
+
+        {% endif %}
+
+        <h2>Animación ProgDinamica 2:</h2>
+
+        {% if gif3 != "no" %}
+            <img style="height: 40%; width: 40%;" src={{ gif3 }}>
 
         {% else %}
             <h4>¡No hay resultado aún!</h4>
