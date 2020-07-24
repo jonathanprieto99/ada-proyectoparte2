@@ -20,7 +20,7 @@ class transformation_block:
     end_index: int 
     scaled_size: float
     direction: bool
-    distance: float
+    distance: int
     final_position: int
     current_traversed: int
 
@@ -158,6 +158,7 @@ def get_matrix (vector_1, vector_2, matching):
     transition_blocks = []
     for match in matches:
         if match.tipo == 0:
+            print ("processing one to one")
             start_block = match.matching[0].i
             final_block = match.matching[0].j
             scaled_size = blocks_2[final_block].j - blocks_2[final_block].i + 1
@@ -165,18 +166,25 @@ def get_matrix (vector_1, vector_2, matching):
             start_index = blocks_1[start_block].i
             end_index = blocks_1[start_block].j
             if blocks_1[start_block].i > blocks_2[final_block].i:
-                direction = 1
+                direction = True
                 distance = blocks_1[start_block].i - blocks_2[final_block].i
             elif blocks_1[start_block].i < blocks_2[final_block].i:
-                direction = 0
+                direction = False
                 distance = blocks_2[final_block].i - blocks_1[start_block].i
             else:
-                direction = 0
+                direction = False
                 distance = 0
+            print ("start_index: " + str(start_index))
+            print ("end_index: " + str(end_index))
+            print ("scaled_size: " + str(scaled_size))
+            print ("direction: " + str(direction))
+            print ("distance: " + str(distance))
+            print ("final_position " + str(final_position))
             transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         elif match.tipo == 1:
+            print ("processing division")
             start_block = match.matching[0].i
-            start_block_size = blocks_1[start_block].j - blocks_2[start_block].i + 1
+            start_block_size = blocks_1[start_block].j - blocks_1[start_block].i + 1
             final_blocks = []
             for pair in match.matching:
                 final_blocks.append (pair.j)
@@ -192,18 +200,26 @@ def get_matrix (vector_1, vector_2, matching):
                 proportion = scaled_size / total_size
                 start_block_portion_size = proportion * start_block_size
                 end_index = start_index + math.floor (start_block_portion_size)
+                print ("next block start: " + str(next_block_start))
                 next_block_start = end_index + 1
                 if start_index > blocks_2[block].i:
-                    direction = 1
+                    direction = True
                     distance = start_index - blocks_2[block].i
                 elif start_index < blocks_2[block].i:
-                    direction = 0
+                    direction = False
                     distance = blocks_2[block].i - start_index
                 else:
-                    direction = 0
+                    direction = False
                     distance = 0
+                print ("start_index: " + str(start_index))
+                print ("end_index: " + str(end_index))
+                print ("scaled_size: " + str(scaled_size))
+                print ("direction: " + str(direction))
+                print ("distance: " + str(distance))
+                print ("final_position " + str(final_position))
                 transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         else:
+            print ("processing agroupation")
             start_blocks = []
             final_block = match.matching[0].j
             final_block_size = blocks_2[final_block].j - blocks_2[final_block].i + 1
@@ -220,44 +236,67 @@ def get_matrix (vector_1, vector_2, matching):
                 proportion = (end_index - start_index + 1) / total_size
                 scaled_size = math.floor (proportion * final_block_size)
                 final_position = next_block_start
-                next_block_start = start_index + scaled_size + 1
+                next_block_start = final_position + scaled_size + 1
                 if start_index > final_position:
-                    direction = 1
+                    direction = True
                     distance = start_index - final_position
                 elif start_index < final_position:
-                    direction = 0
+                    direction = False
                     distance = final_position - start_index
                 else:
-                    direction = 0
+                    direction = False
                     distance = 0
+                if scaled_size == 0:
+                    scaled_size = 1
+                print ("start_index: " + str(start_index))
+                print ("end_index: " + str(end_index))
+                print ("scaled_size: " + str(scaled_size))
+                print ("direction: " + str(direction))
+                print ("distance: " + str(distance))
+                print ("final_position " + str(final_position))
                 transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
+    print (transition_blocks) 
     for i in range (1, 6):
+        print ("=========================")
+        print ("transition " + str(i))
         for j in range (len (vector_1)):
             matrix[i].append (False)
         for block in transition_blocks:
             print ("calculating block")
+            print (block)
             if (block.end_index - block.start_index + 1) > block.scaled_size:
                 print ("current bigger than final")
+                print ("end_index: " + str(block.end_index))
+                print ("start_index: " + str(block.start_index))
+                print ("current_traversed: " + str (block.current_traversed))
+                print ("scaled_size: " + str (block.scaled_size))
+                print ("size per transition: " + str (math.floor (block.scaled_size / 5)))
                 current_size = (block.end_index - block.start_index + 1) - block.current_traversed * math.floor (block.scaled_size / 5)
             elif (block.end_index - block.start_index + 1) < block.scaled_size:
                 print ("current smaller than final")
                 current_size = (block.end_index - block.start_index + 1) + block.current_traversed * math.floor (block.scaled_size / 5)
+                print ("current bigger than final")
+                print ("end_index: " + str(block.end_index))
+                print ("start_index: " + str(block.start_index))
+                print ("current_traversed: " + str (block.current_traversed))
+                print ("scaled_size: " + str (block.scaled_size))
+                print ("size per transition: " + str (math.floor (block.scaled_size / 5)))
             else:
                 print ("current equal to final")
                 current_size = block.scaled_size
-            if distance != 0:
-                if direction == 1:
-                    current_position = block.start_index - block.current_traversed * math.floor (distance / 5)
+            if block.distance != 0:
+                if block.direction == True:
+                    current_position = block.start_index - block.current_traversed * math.floor (block.distance / 5)
                 else:
-                    current_position = block.start_index + block.current_traversed * math.floor (distance / 5)
+                    current_position = block.start_index + block.current_traversed * math.floor (block.distance / 5)
             else:
                 current_position = block.start_index
-            print ("block")
-            print (current_position)
-            print (current_size)
+            print ("beggining transition")
             for k in range (current_size):
                 matrix[i][current_position + k] = True
                 block.current_traversed += 1
+            print ("----------------------")
+        print ("=========================")
     
     return matrix
 
