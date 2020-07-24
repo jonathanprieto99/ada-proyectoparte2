@@ -91,6 +91,9 @@ def upload_image():
             
             trans.greedy_trans (np_im, np_im2)
 
+            #img = Image.fromarray(data, 'RGB')
+            #img.save('my.png')
+
             file2 = open("array2.txt", "a")
             file2.write(str(np_im2))
             file2.close()
