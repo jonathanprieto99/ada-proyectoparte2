@@ -19,6 +19,7 @@ class transformation_block:
     start_index: int
     end_index: int 
     scaled_size: float
+    direction: bool
     distance: float
     direction: bool
     final_position: int
