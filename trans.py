@@ -107,14 +107,12 @@ def greedy_trans (A, B):
 
 def generate_animation (image_1, image_2, matchings):
     transition = generate_transition (image_1, image_2, matchings)
-    for row in image_1:
-        print (row)
+    images = []
+    images.append (image_1)
     for image in transition:
-        print ("image")
-        for row in image:
-            print (row)
-    for row in image_2:
-        print (row)
+        images.append (image)
+    images.append (image_2)
+    return images 
     
 def generate_transition (image_1, image_2, matchings):
     transition = []
@@ -258,7 +256,7 @@ def get_matrix (vector_1, vector_2, matching):
     print (transition_blocks) 
     for i in range (1, 6):
         print ("=========================")
-        print ("transition " + str(i))
+        print ("TRANSITION " + str(i))
         for j in range (len (vector_1)):
             matrix[i].append (False)
         for block in transition_blocks:
@@ -270,34 +268,35 @@ def get_matrix (vector_1, vector_2, matching):
                 print ("start_index: " + str(block.start_index))
                 print ("current_traversed: " + str (block.current_traversed))
                 print ("scaled_size: " + str (block.scaled_size))
-                print ("size per transition: " + str (math.floor (block.scaled_size / 5)))
-                current_size = (block.end_index - block.start_index + 1) - block.current_traversed * math.floor (block.scaled_size / 5)
+                current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.scaled_size / 5))
             elif (block.end_index - block.start_index + 1) < block.scaled_size:
                 print ("current smaller than final")
-                current_size = (block.end_index - block.start_index + 1) + block.current_traversed * math.floor (block.scaled_size / 5)
+                current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size / 5))
                 print ("current bigger than final")
                 print ("end_index: " + str(block.end_index))
                 print ("start_index: " + str(block.start_index))
                 print ("current_traversed: " + str (block.current_traversed))
                 print ("scaled_size: " + str (block.scaled_size))
-                print ("size per transition: " + str (math.floor (block.scaled_size / 5)))
             else:
                 print ("current equal to final")
                 current_size = block.scaled_size
             if block.distance != 0:
                 if block.direction == True:
-                    current_position = block.start_index - block.current_traversed * math.floor (block.distance / 5)
+                    current_position = block.start_index - math.floor (block.current_traversed * (block.distance / 5))
                 else:
-                    current_position = block.start_index + block.current_traversed * math.floor (block.distance / 5)
+                    current_position = block.start_index + math.floor (block.current_traversed * (block.distance / 5))
             else:
                 current_position = block.start_index
             print ("beggining transition")
+            print ("current position: " + str(current_position))
+            print ("current size: " + str(current_size))
             for k in range (current_size):
-                matrix[i][current_position + k] = True
-                block.current_traversed += 1
+                if current_position + k < len (vector_1):
+                    matrix[i][current_position + k] = True
+            block.current_traversed += 1
             print ("----------------------")
         print ("=========================")
-    
+     
     return matrix
 
 size = 16
