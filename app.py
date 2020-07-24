@@ -89,7 +89,11 @@ def upload_image():
             im2.close()
             #print(np_im2)
             
-            trans.greedy_trans (np_im, np_im2)
+            arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
+
+            for i in range(1,6):
+                imagen=Image.fromarray(arrayimagenes[i])
+                imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
 
             #img = Image.fromarray(data, 'RGB')
             #img.save('my.png')
