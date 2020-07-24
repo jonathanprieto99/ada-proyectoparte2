@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 import numpy
 import sys
+import trans
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
@@ -83,6 +84,8 @@ def upload_image():
             np_im2 = numpy.array(imgblack2)
             im2.close()
             #print(np_im2)
+            
+            trans.greedy_trans (np_im, np_im2)
 
             file2 = open("array2.txt", "a")
             file2.write(str(np_im2))
