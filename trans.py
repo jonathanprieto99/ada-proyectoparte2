@@ -21,7 +21,6 @@ class transformation_block:
     scaled_size: float
     direction: bool
     distance: float
-    direction: bool
     final_position: int
     current_traversed: int
 
