@@ -138,7 +138,6 @@ def getMatchDivision(A,B):
     return min_match
 
 def min_matching_dynamic(A,B):
-    result = Matching(0,[], 0)
 
     blocks_A = get_blocks(A)
     blocks_B = get_blocks(B)
@@ -146,7 +145,6 @@ def min_matching_dynamic(A,B):
         mem_pg.append([])
         for j in blocks_B:
             mem_pg[i].append(Matching(0,[], 0))
-    min_matching = Matching(0,[], 0)
     min_matching = fill_matrix(blocks_A, blocks_B)
     return min_matching
 
@@ -176,7 +174,7 @@ def opt_solution_dp(A,B):
     min_agrupacion.weight = inf
     min_division.weight = inf
 
-    if len(A) == 1 and len(B)==1:
+    if len(A) == 1 and len(B) == 1:
         match = Pair(0, 0, 0)
         match.i = A[0].index
         match.j = B[0].index
