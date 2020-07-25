@@ -5,6 +5,7 @@ from PIL import Image
 import numpy
 import sys
 import trans
+import trans2
 
 numpy.set_printoptions(threshold=sys.maxsize)
 

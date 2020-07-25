@@ -1,3 +1,4 @@
+from cmath import inf
 from dataclasses import dataclass
 import random
 
@@ -150,40 +151,23 @@ def opt_solution_dp(A,B):
     min_agrupacion = Matching([], 0)
     min_division = Matching([], 0)
 
-    min_agrupacion.weight= inf
-    min_division.weight=inf
+    min_agrupacion.weight = inf
+    min_division.weight = inf
 
     if len(A) == 1 and len(B)==1:
         match = Pair(0, 0, 0)
         match.i = A[0].index
         match.j = B[0].index
-        min_match.matching.append(match)
-        min_match.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1)
-    return min_match
+        result.matching.append(match)
+        result.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1)
+        return result
 
     for k in range(i-1,0):
-        left_A = A[0:k+1]
-        right_A(A[0:0]+k+1, A[])
-        
+        left_A = A[:k+1]
+        right_A = A[k+1:]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        left_B = B[:k-1]
+        right_B = B[B-1:]
 
 def greedy_trans(A, B):
     result = []
