@@ -108,10 +108,13 @@ def upload_image():
             #print(np_im2)
             
             arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
+            arrayimagenes2 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans(np_im.tolist(), np_im2.tolist()))
 
             for i in range(1, 6):
                 imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
                 imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
+                imagen = Image.fromarray(numpy.array(arrayimagenes2[i]))
+                imagen.save(app.config['GIF_FOLDER2'] + "img" + str(i) + ".jpg")
                 #imagencolorada=Image.fromarray(numpy.array(colorate(np_imcolor.tolist(), arrayimagenes[i])))
                 #imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
 
