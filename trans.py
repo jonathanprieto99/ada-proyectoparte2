@@ -105,7 +105,7 @@ def greedy_trans (A, B):
     temp = Matching (0, [], 0)
     for i in range (len (A)):
         temp = greedy_matching (A[i], B[i])
-        result.append (temp)
+        result.append (Matching (temp.tipo, temp.matching, temp.weight))
     return result
 
 
@@ -142,6 +142,34 @@ def getMatchDivision (A, B):
     min_match.weight = (A[0].j - A[0].i + 1) / suma
     return min_match
 
+def getMatchGroup_avg (A, B, var):
+    min_match = Matching (0, [], 0)
+    match = Pair (0, 0, 0)
+    suma = 0.0
+    match.j = B[0].index
+    aux_matches = []
+    for it in range (len (A)):
+        match.i = A[it].index
+        aux_matches.append (Pair (match.i, match.j, 0))
+        min_match.matching.append (aux_matches[it])
+        suma += A[it].j - A[it].i + 1
+    min_match.weight = abs ((suma / (B[0].j - B[0].i + 1)) - var)
+    return min_match
+
+def getMatchDivision_avg (A, B, var):
+    min_match = Matching (0, [], 0)
+    match = Pair (0, 0, 0)
+    suma = 0.0
+    match.i = A[0].index
+    aux_matches = []
+    for it in range (len (B)):
+        match.j = B[it].index
+        aux_matches.append (Pair (match.i, match.j, 0))
+        min_match.matching.append (aux_matches[it])
+        suma += B[it].j - B[it].i + 1
+    min_match.weight = abs (((A[0].j - A[0].i + 1) / suma) - var)
+    return min_match
+
 def min_matching_dynamic (A, B):
     blocks_A = get_blocks (A)
     blocks_B = get_blocks (B)
@@ -151,6 +179,17 @@ def min_matching_dynamic (A, B):
         for j in range (len (blocks_B)):
             mem_pg[i].append (Matching (0, [], 0)) 
     min_matching = fill_matrix (blocks_A, blocks_B)
+    return min_matching
+
+def min_matching_dynamic_avg (A, B):
+    blocks_A = get_blocks (A)
+    blocks_B = get_blocks (B)
+    var = get_var (blocks_A, blocks_B)
+    for i in range (len (A)):
+        mem_pg.append ([])
+        for j in range (len (blocks_B)):
+            mem_pg[i].append (Matching (0, [], 0))
+    min_matching = fill_matrix_avg (blocks_A, blocks_B, var)
     return min_matching
 
 def fill_matrix (blocks_A, blocks_B):
@@ -168,6 +207,23 @@ def fill_matrix (blocks_A, blocks_B):
             part_B = blocks_B[:1 + j]
             mem_pg[i][j] = opt_solution_dp (part_A, part_B)
     return mem_pg[len (blocks_A) - 1][len (blocks_B) - 1]
+
+def fill_matrix_avg (blocks_A, blocks_B, var):
+    for i in range (len (blocks_A)):
+        part_A = blocks_A[:1 + i]
+        part_B = [blocks_B[0]]
+        mem_pg[i][0] = getMatchGroup_avg (part_A, part_B, var)
+    for j in range (len (blocks_B)):
+        part_A = [blocks_A[0]]
+        part_B = blocks_B[:1 + j]
+        mem_pg[0][j] = getMatchDivision_avg (part_A, part_B, var)
+    for i in range (1, len (blocks_A)):
+        for j in range (1, len (blocks_B)):
+            part_A = blocks_A[:1 + i]
+            part_B = blocks_B[:1 + j]
+            mem_pg[i][j] = opt_solution_dp_avg (part_A, part_B, var)
+    return mem_pg[len (blocks_A) - 1][len (blocks_B) - 1]
+
 
 def opt_solution_dp (A, B):
     min_match = Matching (0, [], 0)
@@ -189,7 +245,7 @@ def opt_solution_dp (A, B):
         right_B = [B[len (B) - 1]]
         
         min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
-        min_right = getMatchDivision (right_A, right_B)
+        min_right = getMatchGroup (right_A, right_B)
         merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
         if merge.weight < min_agrupacion.weight:
             min_agrupacion = Matching (0, merge.matching, merge.weight)
@@ -213,12 +269,73 @@ def opt_solution_dp (A, B):
     else:
         return min_division
 
+def opt_solution_dp_avg (A, B, var):
+    min_match = Matching (0, [], 0)
+    i = len (A) - 1
+    j = len (B) - 1
+    min_agrupacion = Matching (0, [], inf)
+    min_division = Matching (0, [], inf)
+    if len (A) == 1 and len (B) == 1:
+        pair = Pair (A[0].index, B[0].index, 0)
+        matching = Matching (0, [Pair(pair.i, pair.j, 0)],(A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1))
+        return matching
+    k = i - 1
+    while k >= 0:
+        left_A = A[:k + 1]
+        right_A = A[k + 1:]
+
+        left_B = B[:len (B) - 1]
+        right_B = [B[len (B) - 1]]
+
+        min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
+        min_right = getMatchGroup_avg (right_A, right_B, var)
+        merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
+        if merge.weight < min_agrupacion.weight:
+            min_agrupacion = Matching (0, merge.matching, merge.weight)
+        k-= 1
+
+    k = j - 1
+    while k >= 0:
+        left_A = A[:len (A) - 1]
+        right_A = [A[len (A) - 1]]
+
+        left_B = B[:k + 1]
+        right_B = B[k + 1:]
+        min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
+        min_right = getMatchDivision_avg (right_A, right_B, var)
+        merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
+        if merge.weight < min_division.weight:
+            min_division = Matching (0, merge.matching, merge.weight)
+        k -= 1
+    if min_agrupacion.weight < min_division.weight:
+        return min_agrupacion
+    else:
+        return min_division
+
+def get_var (A, B):
+    sum_a = 0
+    sum_b = 0
+    for block in A:
+        sum_a += block.j - block.i + 1
+    for block in B:
+        sum_b += block.j - block.i + 1
+    var = sum_a / sum_b
+    return var
+
 def dp_trans (A, B):
     result = []
     temp = Matching (0, [], 0)
     for i in range (len (A)):
         temp = min_matching_dynamic (A[i], B[i])
-        result.append (temp)
+        result.append (Matching (temp.tipo, temp.matching, temp.weight))
+    return result
+
+def dp_trans_avg (A, B):
+    result = []
+    temp = Matching (0, [], 0)
+    for i in range (len (A)):
+        temp = min_matching_dynamic_avg (A[i], B[i])
+        result.append (Matching (temp.tipo, temp.matching, temp.weight))
     return result
 
 def generate_animation (image_1, image_2, matchings):
@@ -418,19 +535,19 @@ def get_matrix (vector_1, vector_2, matching):
      
     return matrix
 
-#size = 4
-#A = []
-#B = []
+size = 4
+A = []
+B = []
 
-#for i in range(size):
-#    temp = []
-#    A.append(temp)
-#    B.append(temp)
-#    for j in range(size):
-#        A[i].append(random.randint(0, 1))
-#        B[i].append(random.randint(0, 1))
-#B.reverse()
-#for i in range(size):
-#    print(A[i])
-#    print(B[i])
-#generate_animation (A, B, dp_trans (A, B))
+for i in range(size):
+    temp = []
+    A.append(temp)
+    B.append(temp)
+    for j in range(size):
+        A[i].append(random.randint(0, 1))
+        B[i].append(random.randint(0, 1))
+B.reverse()
+for i in range(size):
+    print(A[i])
+    print(B[i])
+generate_animation (A, B, dp_trans_avg (A, B))
