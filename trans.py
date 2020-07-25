@@ -241,7 +241,7 @@ def generate_transition (image_1, image_2, matchings):
     return transition
 
 def get_matrix (vector_1, vector_2, matching):
-    print ("row")
+    #print ("row")
     blocks_1 = get_blocks (vector_1)
     blocks_2 = get_blocks (vector_2)
     if len (blocks_1) == 0 or len (blocks_2) == 0:
