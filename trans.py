@@ -108,125 +108,110 @@ def greedy_trans (A, B):
         result.append (temp)
     return result
 
+
 def merge_matchings (left,right):
     for i in range(len(right)):
         left.append(right[i])
     return left
 
-def getMatchGroup(A,B):
-    min_match = Matching(0,[], 0)
-    match = Pair(0, 0, 0)
-    sum=0.0
+def getMatchGroup (A, B):
+    min_match = Matching (0, [], 0)
+    match = Pair (0, 0, 0)
+    suma = 0.0
     match.j = B[0].index
-    for it in range(len(A)):
+    aux_matches = []
+    for it in range (len (A)):
         match.i = A[it].index
-        min_match.matching.append(match)
-        sum += A[it].j-A[it].i+1
-    min_match.weight=sum/(B[0].j-B[0].i+1)
+        aux_matches.append (Pair (match.i, match.j, 0))
+        min_match.matching.append (aux_matches[it])
+        suma += A[it].j - A[it].i + 1
+    min_match.weight = suma / (B[0].j - B[0].i + 1)
     return min_match
 
-def getMatchDivision(A,B):
-    min_match = Matching(0,[], 0)
-    match = Pair(0, 0, 0)
-    sum=0
+def getMatchDivision (A, B):
+    min_match = Matching (0, [], 0)
+    match = Pair (0, 0, 0)
+    suma = 0.0
     match.i = A[0].index
-    for it in range(len(B)):
-        match.i = B[it].index
-        min_match.matching.append(match)
-        sum += B[it].j-B[it].i+1
-    min_match.weight = (A[0].j-A[0].i+1)/sum
+    aux_matches = []
+    for it in range (len (B)):
+        match.j = B[it].index
+        aux_matches.append (Pair (match.i, match.j, 0))
+        min_match.matching.append (aux_matches[it])
+        suma += B[it].j - B[it].i + 1
+    min_match.weight = (A[0].j - A[0].i + 1) / suma
     return min_match
 
-def min_matching_dynamic(A,B):
-    result = Matching(0,[], 0)
+def min_matching_dynamic (A, B):
+    blocks_A = get_blocks (A)
+    blocks_B = get_blocks (B)
 
-    blocks_A = get_blocks(A)
-    blocks_B = get_blocks(B)
     for i in range (len (A)):
-        mem_pg.append([])
-        for j in blocks_B:
-            mem_pg[i].append(Matching(0,[], 0))
-    min_matching = Matching(0,[], 0)
-    min_matching = fill_matrix(blocks_A, blocks_B)
+        mem_pg.append ([])
+        for j in range (len (blocks_B)):
+            mem_pg[i].append (Matching (0, [], 0)) 
+    min_matching = fill_matrix (blocks_A, blocks_B)
     return min_matching
 
-def fill_matrix(blocks_A, blocks_B):
-    for i in range(len(blocks_A)-1):
-        part_A = blocks_A[0:1+i]
+def fill_matrix (blocks_A, blocks_B):
+    for i in range (len (blocks_A)):
+        part_A = blocks_A[:1 + i]
         part_B = [blocks_B[0]]
-        mem_pg[i][0] = getMatchGroup(part_A, part_B)
-    for j in range(len(blocks_B) - 1):
-        part_B = blocks_B[0:1+j]
+        mem_pg[i][0] = getMatchGroup (part_A, part_B)
+    for j in range (len (blocks_B)):
         part_A = [blocks_A[0]]
-        mem_pg[0][j] = getMatchDivision(part_A, part_B)
-    for i in range(len(blocks_A) - 1):
-        for j in range(len(blocks_B) - 1):
-            part_A = blocks_A[0:1+i]
-            part_B = blocks_B[0:1+j]
-            mem_pg[i][j] = opt_solution_dp(part_A, part_B)
-    return mem_pg[len(blocks_A)-1][len(blocks_B)-1]
+        part_B = blocks_B[:1 + j]
+        mem_pg[0][j] = getMatchDivision (part_A, part_B)
+    for i in range (1, len (blocks_A)):
+        for j in range (1, len (blocks_B)):
+            part_A = blocks_A[:1 + i]
+            part_B = blocks_B[:1 + j]
+            mem_pg[i][j] = opt_solution_dp (part_A, part_B)
+    return mem_pg[len (blocks_A) - 1][len (blocks_B) - 1]
 
-def opt_solution_dp(A,B):
-    result = Matching(0,[], 0)
-    i = len(A)-1
-    j = len(B)-1
-    min_agrupacion = Matching(0,[], 0)
-    min_division = Matching(0,[], 0)
+def opt_solution_dp (A, B):
+    min_match = Matching (0, [], 0)
+    i = len (A) - 1
+    j = len (B) - 1
+    min_agrupacion = Matching (0, [], inf)
+    min_division = Matching (0, [], inf)
 
-    min_agrupacion.weight = inf
-    min_division.weight = inf
+    if len (A) == 1 and len (B) == 1:
+        pair = Pair (A[0].index, B[0].index, 0)
+        matching = Matching (0, [Pair(pair.i, pair.j, 0)],(A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1))
+        return matching
+    k = i - 1
+    while k >= 0:
+        left_A = A[:k + 1]
+        right_A = A[k + 1:]
 
-    if len(A) == 1 and len(B)==1:
-        match = Pair(0, 0, 0)
-        match.i = A[0].index
-        match.j = B[0].index
-        result.matching.append(match)
-        result.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1)
-        return result
-
-    for k in range(i-1, 0):
-        if k < 0:
-            break
-        left_A = A[:k+1]
-        right_A = A[k+1:]
-
-        left_B = B[:k-1]
-        right_B = B[k-1:]
-        print (left_A)
-        print (right_A)
-        min_left = mem_pg[len(left_A)-1][len(left_B)-1]
-        min_right = getMatchGroup(right_A, right_B)
-
-        merge = Matching(0,[], 0)
-        merge.matching=merge_matchings(min_left.matching,min_right.matching)
-        merge.weight=min_left.weight+min_right.weight
+        left_B = B[:len (B) - 1]
+        right_B = [B[len (B) - 1]]
+        
+        min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
+        min_right = getMatchDivision (right_A, right_B)
+        merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
         if merge.weight < min_agrupacion.weight:
-            min_agrupacion = merge
-        merge = Matching(0,merge_matchings(min_left.matching, min_right.matching), min_left.weight+min_right.weight)
-    for k in range(j - 1, 0):
-        if k < 0:
-            break
+            min_agrupacion = Matching (0, merge.matching, merge.weight)
+        k-= 1
+
+    k = j - 1
+    while k >= 0:
+        left_A = A[:len (A) - 1]
+        right_A = [A[len (A) - 1]]
+
         left_B = B[:k + 1]
         right_B = B[k + 1:]
-
-        left_A = A[:k - 1]
-        right_A = A[k - 1:]
-        print (left_A)
-        print (right_A)
-        min_left = mem_pg[len(left_A) - 1][len(left_B) - 1]
-        min_right = getMatchDivision(right_A, right_B)
-
-        merge = Matching(0,[], 0)
-        merge.matching = merge_matchings(min_left.matching, min_right.matching)
-        merge.weight = min_left.weight + min_right.weight
-        if merge.weight < min_agrupacion.weight:
-            min_division = merge
-        merge = Matching(0,merge_matchings(min_left.matching, min_right.matching), min_left.weight + min_right.weight)
-
-        if min_agrupacion.weight < min_division.weight:
-            return min_agrupacion
-        else:
-            return min_division
+        min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
+        min_right = getMatchDivision (right_A, right_B)
+        merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
+        if merge.weight < min_division.weight:
+            min_division = Matching (0, merge.matching, merge.weight)
+        k -= 1
+    if min_agrupacion.weight < min_division.weight:
+        return min_agrupacion
+    else:
+        return min_division
 
 def dp_trans (A, B):
     result = []
@@ -433,21 +418,19 @@ def get_matrix (vector_1, vector_2, matching):
      
     return matrix
 
-size = 4
-A = []
-B = []
+#size = 4
+#A = []
+#B = []
 
-for i in range(size):
-    temp = []
-    A.append(temp)
-    B.append(temp)
-    for j in range(size):
-        A[i].append(random.randint(0, 1))
-        B[i].append(random.randint(0, 1))
-B.reverse()
-for i in range(size):
-    print(A[i])
-    print(B[i])
-result = dp_trans(A, B)
-for matching in result:
-    print (matching)
+#for i in range(size):
+#    temp = []
+#    A.append(temp)
+#    B.append(temp)
+#    for j in range(size):
+#        A[i].append(random.randint(0, 1))
+#        B[i].append(random.randint(0, 1))
+#B.reverse()
+#for i in range(size):
+#    print(A[i])
+#    print(B[i])
+#generate_animation (A, B, dp_trans (A, B))
