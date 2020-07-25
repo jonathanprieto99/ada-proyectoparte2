@@ -208,7 +208,7 @@ def fill_matrix (blocks_A, blocks_B):
         mem_pg[0][j] = getMatchDivision (part_A, part_B)
     for i in range (1, len (blocks_A)):
         for j in range (1, len (blocks_B)):
-            print ("filling spot " + str(i) + "," + str(j))
+            #print ("filling spot " + str(i) + "," + str(j))
             part_A = blocks_A[:1 + i]
             part_B = blocks_B[:1 + j]
             mem_pg[i][j] = opt_solution_dp (part_A, part_B)
@@ -355,11 +355,11 @@ def generate_animation (image_1, image_2, matchings):
     
 def generate_transition (image_1, image_2, matchings):
     transition = []
-    print (len (image_1))
+    #print (len (image_1))
     for i in range (5):
         transition.append ([])
     for i in range (len (image_1)):
-        print (i)
+        #print (i)
         matrix = get_matrix (image_1[i], image_2[i], matchings[i])
         for j in range (5):
             transition[j].append (matrix[j + 1])
@@ -424,7 +424,7 @@ def get_matrix (vector_1, vector_2, matching):
             #print ("final_position " + str(final_position))
             transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         elif match.tipo == 1:
-            print ("processing division")
+            #print ("processing division")
             start_block = match.matching[0].i
             start_block_size = blocks_1[start_block].j - blocks_1[start_block].i + 1
             final_blocks = []
