@@ -39,9 +39,9 @@ def generate_gif(directory):
             array.append(img1)
             print("Image File: "+file)
 
-    gif = Image.new('RGB', (400, 600))
+    gif = Image.new('RGB', (1200, 1200))
 
-    gif.save(directory+'out.gif', save_all=True, append_images=array, loop=0)
+    gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
 
     return directory+'out.gif'
 
@@ -91,8 +91,10 @@ def upload_image():
             
             arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
 
-            for i in range(1,6):
-                imagen=Image.fromarray(arrayimagenes[i])
+            files = os.listdir(app.config['GIF_FOLDER1'])
+
+            for i in range(1, 6):
+                imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
                 imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
 
             #img = Image.fromarray(data, 'RGB')
