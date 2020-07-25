@@ -32,6 +32,18 @@
       <h2>Imagen2</h2>
       <input type="file" name="file2"><br>
         <br>
+      <h2>Seleccionar algortimo:</h2>
+      <select name="algoritmo">
+
+        <option>GREEDY</option>
+
+        <option>ProgDinamica 1</option>
+
+        <option>ProgDinamica 2</option>
+
+      </select>
+      <br>
+      <br>
       <input type="submit" value="Cargar">
     </form>
 
@@ -49,36 +61,15 @@
 
         {% endif %}
 
-        <h2>Animación GREEDY:</h2>
+        <h2>Animación {{ algoritmo }}:</h2>
 
-        {% if gif1 != "no" %}
-            <img style="height: 40%; width: 40%;" src={{ gif1 }}>
-
-        {% else %}
-            <h4>¡No hay resultado aún!</h4>
-
-        {% endif %}
-
-        <h2>Animación ProgDinamica 1:</h2>
-
-        {% if gif2 != "no" %}
-            <img style="height: 40%; width: 40%;" src={{ gif2 }}>
+        {% if gif != "no" %}
+            <img style="height: 40%; width: 40%;" src={{ gif }}>
 
         {% else %}
             <h4>¡No hay resultado aún!</h4>
 
         {% endif %}
-
-        <h2>Animación ProgDinamica 2:</h2>
-
-        {% if gif3 != "no" %}
-            <img style="height: 40%; width: 40%;" src={{ gif3 }}>
-
-        {% else %}
-            <h4>¡No hay resultado aún!</h4>
-
-        {% endif %}
-
     </div>
 
 </body>
