@@ -169,6 +169,13 @@ def opt_solution_dp(A,B):
         left_B = B[:k-1]
         right_B = B[B-1:]
 
+        min_left = opt_solution_dp(left_A, left_B)
+        min_right = opt_solution_dp(right_A, right_B)
+
+        merge = Matching(merge_matchings(min_left.matching, min_right.matching), min_left.weight+min_right.weight)
+
+
+
 def greedy_trans(A, B):
     result = []
     temp = Matching([], 0)
