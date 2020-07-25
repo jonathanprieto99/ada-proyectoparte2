@@ -305,16 +305,16 @@ size = 16
 A = []
 B = []
 
-for i in range (size):
+for i in range(size):
     temp = []
-    A.append (temp)
-    B.append (temp)
-    for j in range (size):
-        A[i].append (random.randint (0, 1))
-        B[i].append (random.randint (0, 1))
-B.reverse ()
-for i in range (size):
-    print (A[i])
-    print (B[i])
+    A.append(temp)
+    B.append(temp)
+    for j in range(size):
+        A[i].append(random.randint(0, 1))
+        B[i].append(random.randint(0, 1))
+B.reverse()
+for i in range(size):
+    print(A[i])
+    print(B[i])
 
-generate_animation (A, B, greedy_trans (A, B))
+generate_animation(A, B, greedy_trans(A, B))

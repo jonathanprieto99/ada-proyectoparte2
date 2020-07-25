@@ -5,6 +5,7 @@ from PIL import Image
 import numpy
 import sys
 import trans
+import trans2
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
@@ -21,6 +22,8 @@ app.config['UPLOAD_FOLDER'] = "static/upload"
 app.config['GIF_FOLDER1'] = "static/GIF_FOLDER1/"
 app.config['GIF_FOLDER2'] = "static/GIF_FOLDER2/"
 app.config['GIF_FOLDER3'] = "static/GIF_FOLDER3/"
+
+app.config['GIF_FOLDER1_Colored'] = "static/GIF_FOLDER1_Colored/"
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -39,11 +42,18 @@ def generate_gif(directory):
             array.append(img1)
             print("Image File: "+file)
 
-    gif = Image.new('RGB', (400, 600))
+    gif = Image.new('RGB', (1200, 1200))
 
-    gif.save(directory+'out.gif', save_all=True, append_images=array, loop=0)
+    gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
 
     return directory+'out.gif'
+
+def colorate(matrizoriginal,matrizdecolorada):
+    for i in range(len(matrizdecolorada)):
+        for y in range(len(matrizdecolorada[i])):
+            matrizdecolorada[i][y] = matrizoriginal[i][y]
+    return matrizdecolorada
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -89,10 +99,13 @@ def upload_image():
             im2.close()
             #print(np_im2)
             
-            trans.greedy_trans (np_im, np_im2)
+            arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
 
-            #img = Image.fromarray(data, 'RGB')
-            #img.save('my.png')
+            for i in range(1, 6):
+                imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
+                imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
+                imagencolorada=Image.fromarray(colorate(np_im2.tolist(),arrayimagenes[i]))
+                imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
 
             file2 = open("array2.txt", "a")
             file2.write(str(np_im2))
