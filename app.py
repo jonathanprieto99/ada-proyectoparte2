@@ -23,6 +23,8 @@ app.config['GIF_FOLDER1'] = "static/GIF_FOLDER1/"
 app.config['GIF_FOLDER2'] = "static/GIF_FOLDER2/"
 app.config['GIF_FOLDER3'] = "static/GIF_FOLDER3/"
 
+app.config['GIF_FOLDER1_Colored'] = "static/GIF_FOLDER1_Colored/"
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -45,6 +47,13 @@ def generate_gif(directory):
     gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
 
     return directory+'out.gif'
+
+def colorate(matrizoriginal,matrizdecolorada):
+    for i in range(len(matrizdecolorada)):
+        for y in range(len(matrizdecolorada[i])):
+            matrizdecolorada[i][y] = matrizoriginal[i][y]
+    return matrizdecolorada
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -92,14 +101,11 @@ def upload_image():
             
             arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
 
-            files = os.listdir(app.config['GIF_FOLDER1'])
-
             for i in range(1, 6):
                 imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
                 imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
-
-            #img = Image.fromarray(data, 'RGB')
-            #img.save('my.png')
+                imagencolorada=Image.fromarray(colorate(np_im2.tolist(),arrayimagenes[i]))
+                imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
 
             file2 = open("array2.txt", "a")
             file2.write(str(np_im2))
