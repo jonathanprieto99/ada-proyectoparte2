@@ -33,18 +33,22 @@ def generate_gif(directory):
     files = os.listdir(directory)
     array = []
 
-    for file in files:
-        if "gif" in file:
-            print("Gif file :"+file)
-        else:
-            img1 = Image.open(directory+file)
-            array.append(img1)
-            print("Image File: "+file)
+    #for file in files:
+    #    if "gif" in file:
+    #        print("Gif file :"+file)
+    #    else:
+    #        img1 = Image.open(directory+file)
+    #        array.append(img1)
+    #        print("Image File: "+file)
+    for i in range (7):
+        filename = "img" + str(i) + ".jpg"
+        img = Image.open (directory + filename)
+        array.append (img)
 
-    gif = Image.new('RGB', (1200, 1200))
+    #gif = Image.new('RGB', (1200, 1200))
 
-    gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
-
+    #gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
+    array[0].save (directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
     return directory+'out.gif'
 
 def colorate(matrizoriginal,matrizdecolorada):
@@ -107,31 +111,34 @@ def upload_image():
             im2.close()
             #print(np_im2)
             
-            arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
+            #arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
+            #print ("finished greedy")
             arrayimagenes2 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans(np_im.tolist(), np_im2.tolist()))
-            arrayimagenes3 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans_avg(np_im.tolist(), np_im2.tolist()))
-
+            #arrayimagenes3 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans_avg(np_im.tolist(), np_im2.tolist()))
+            Imagen = Image.fromarray(np_im)
+            Imagen.save (app.config['GIF_FOLDER2'] + "img" + str(0) + ".jpg")
             for i in range(1, 6):
-                imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
-                imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
+                #imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
+                #imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
                 imagen = Image.fromarray(numpy.array(arrayimagenes2[i]))
                 imagen.save(app.config['GIF_FOLDER2'] + "img" + str(i) + ".jpg")
-                imagen = Image.fromarray(numpy.array(arrayimagenes3[i]))
-                imagen.save(app.config['GIF_FOLDER3'] + "img" + str(i) + ".jpg")
+                #imagen = Image.fromarray(numpy.array(arrayimagenes3[i]))
+                #imagen.save(app.config['GIF_FOLDER3'] + "img" + str(i) + ".jpg")
                 #imagencolorada=Image.fromarray(numpy.array(colorate(np_imcolor.tolist(), arrayimagenes[i])))
                 #imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
-
+            Imagen = Image.fromarray(np_im2)
+            Imagen.save (app.config['GIF_FOLDER2'] + "img" + str(6) + ".jpg")
             #file2 = open("array2.txt", "a")
             #file2.write(str(np_im2))
             #file2.close()
 
-            gif1 = generate_gif(app.config['GIF_FOLDER1'])
+            #gif1 = generate_gif(app.config['GIF_FOLDER1'])
             gif2 = generate_gif(app.config['GIF_FOLDER2'])
-            gif3 = generate_gif(app.config['GIF_FOLDER3'])
+            #gif3 = generate_gif(app.config['GIF_FOLDER3'])
 
-            return render_template("index.html", filename=filepath, filename2=filepath2, gif1=gif1, gif2=gif2, gif3=gif3)
+            return render_template("index.html", filename=filepath, filename2=filepath2, gif2=gif2)
 
-    return render_template("index.html", filename=filepath, gif1=gif1, gif2=gif2, gif3=gif3)
+    return render_template("index.html", filename=filepath, gif2=gif2)
 
 
 if __name__ == '__main__':

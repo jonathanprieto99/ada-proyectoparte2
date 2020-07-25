@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import random
 import math
 from cmath import inf
+import numpy
 
 mem_pg = []
 
@@ -193,6 +194,8 @@ def min_matching_dynamic_avg (A, B):
     return min_matching
 
 def fill_matrix (blocks_A, blocks_B):
+    if len (blocks_A) == 0 or len (blocks_B) == 0:
+        return Matching (0, [], 0)
     for i in range (len (blocks_A)):
         part_A = blocks_A[:1 + i]
         part_B = [blocks_B[0]]
@@ -203,6 +206,7 @@ def fill_matrix (blocks_A, blocks_B):
         mem_pg[0][j] = getMatchDivision (part_A, part_B)
     for i in range (1, len (blocks_A)):
         for j in range (1, len (blocks_B)):
+            print ("filling spot " + str(i) + "," + str(j))
             part_A = blocks_A[:1 + i]
             part_B = blocks_B[:1 + j]
             mem_pg[i][j] = opt_solution_dp (part_A, part_B)
@@ -240,10 +244,8 @@ def opt_solution_dp (A, B):
     while k >= 0:
         left_A = A[:k + 1]
         right_A = A[k + 1:]
-
         left_B = B[:len (B) - 1]
         right_B = [B[len (B) - 1]]
-        
         min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
         min_right = getMatchGroup (right_A, right_B)
         merge = Matching (0, merge_matchings (min_left.matching, min_right.matching), min_left.weight + min_right.weight)
@@ -255,7 +257,6 @@ def opt_solution_dp (A, B):
     while k >= 0:
         left_A = A[:len (A) - 1]
         right_A = [A[len (A) - 1]]
-
         left_B = B[:k + 1]
         right_B = B[k + 1:]
         min_left = mem_pg[len (left_A) - 1][len (left_B) - 1]
@@ -341,6 +342,9 @@ def dp_trans_avg (A, B):
 def generate_animation (image_1, image_2, matchings):
     transition = generate_transition (image_1, image_2, matchings)
     images = []
+    for image in transition:
+        for row in image:
+            row = numpy.logical_not (row)
     images.append (image_1)
     for image in transition:
         images.append (image)
@@ -349,9 +353,11 @@ def generate_animation (image_1, image_2, matchings):
     
 def generate_transition (image_1, image_2, matchings):
     transition = []
+    print (len (image_1))
     for i in range (5):
         transition.append ([])
     for i in range (len (image_1)):
+        print (i)
         matrix = get_matrix (image_1[i], image_2[i], matchings[i])
         for j in range (5):
             transition[j].append (matrix[j + 1])
@@ -416,7 +422,7 @@ def get_matrix (vector_1, vector_2, matching):
             #print ("final_position " + str(final_position))
             transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         elif match.tipo == 1:
-            #print ("processing division")
+            print ("processing division")
             start_block = match.matching[0].i
             start_block_size = blocks_1[start_block].j - blocks_1[start_block].i + 1
             final_blocks = []
@@ -446,6 +452,7 @@ def get_matrix (vector_1, vector_2, matching):
                     direction = False
                     distance = 0
                 #print ("start_index: " + str(start_index))
+                #print ("start_block_size: " + str(start_block_size))
                 #print ("end_index: " + str(end_index))
                 #print ("scaled_size: " + str(scaled_size))
                 #print ("direction: " + str(direction))
@@ -483,6 +490,7 @@ def get_matrix (vector_1, vector_2, matching):
                 if scaled_size == 0:
                     scaled_size = 1
                 #print ("start_index: " + str(start_index))
+                #print ("final_block_size: " + str (final_block_size))
                 #print ("end_index: " + str(end_index))
                 #print ("scaled_size: " + str(scaled_size))
                 #print ("direction: " + str(direction))
@@ -504,10 +512,11 @@ def get_matrix (vector_1, vector_2, matching):
                 #print ("start_index: " + str(block.start_index))
                 #print ("current_traversed: " + str (block.current_traversed))
                 #print ("scaled_size: " + str (block.scaled_size))
-                current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.scaled_size / 5))
+                #print ("current size growth: " + str (block.current_traversed * (block.end_index - block.start_index + 1 - block.scaled_size) / 5))
+                current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.end_index - block.start_index + 1 - block.scaled_size) / 5)
             elif (block.end_index - block.start_index + 1) < block.scaled_size:
                 #print ("current smaller than final")
-                current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size / 5))
+                current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size - block.end_index - block.start_index + 1) / 5)
                 #print ("current bigger than final")
                 #print ("end_index: " + str(block.end_index))
                 #print ("start_index: " + str(block.start_index))
@@ -532,22 +541,28 @@ def get_matrix (vector_1, vector_2, matching):
             block.current_traversed += 1
             #print ("----------------------")
         #print ("=========================")
-     
+    print ("matrix obtained")     
     return matrix
 
-size = 4
-A = []
-B = []
+#size = 4
+#A = [1, 0, 0, 1, 1, 1, 0, 1]
+#B = [0, 1, 0, 0, 0, 1, 0, 0]
 
-for i in range(size):
-    temp = []
-    A.append(temp)
-    B.append(temp)
-    for j in range(size):
-        A[i].append(random.randint(0, 1))
-        B[i].append(random.randint(0, 1))
-B.reverse()
-for i in range(size):
-    print(A[i])
-    print(B[i])
-generate_animation (A, B, dp_trans_avg (A, B))
+#for i in range(size):
+#    temp = []
+#    A.append(temp)
+#    B.append(temp)
+#for j in range(size):
+#        A[i].append(random.randint(0, 1))
+#        B[i].append(random.randint(0, 1))
+#B.reverse()
+#for i in range(size):
+#    print(A[i])
+#    print(B[i])
+#result = dp_trans_avg (A, B)
+
+#for match in result:
+#    print (match)
+
+#result = min_matching_dynamic (A, B)
+#print (result)
