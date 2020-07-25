@@ -23,7 +23,7 @@ app.config['GIF_FOLDER1'] = "static/GIF_FOLDER1/"
 app.config['GIF_FOLDER2'] = "static/GIF_FOLDER2/"
 app.config['GIF_FOLDER3'] = "static/GIF_FOLDER3/"
 
-app.config['GIF_FOLDER1_Colored'] = "static/GIF_FOLDER1_Colored/"
+#app.config['GIF_FOLDER1_Colored'] = "static/GIF_FOLDER1_Colored/"
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -52,6 +52,9 @@ def colorate(matrizoriginal,matrizdecolorada):
     for i in range(len(matrizdecolorada)):
         for y in range(len(matrizdecolorada[i])):
             matrizdecolorada[i][y] = matrizoriginal[i][y]
+    file1color = open("arraycolor2.txt", "a")
+    file1color.write(str(matrizdecolorada))
+    file1color.close()
     return matrizdecolorada
 
 
@@ -84,14 +87,20 @@ def upload_image():
             file2.save(filepath2)
 
             im = Image.open(filepath)
+            #imcolor = im.convert('RGB')
+            #np_imcolor=numpy.array(imcolor)
             imgblack = im.convert('1')
             np_im = numpy.array(imgblack)
             im.close()
             # print(np_im)
 
-            file1 = open("array.txt", "a")
-            file1.write(str(np_im))
-            file1.close()
+            #file1 = open("array.txt", "a")
+            #file1.write(str(np_im))
+            #file1.close()
+
+            #file1color = open("arraycolor.txt", "a")
+            #file1color.write(str(np_imcolor))
+            #file1color.close()
 
             im2 = Image.open(filepath2)
             imgblack2 = im2.convert('1')
@@ -104,12 +113,12 @@ def upload_image():
             for i in range(1, 6):
                 imagen=Image.fromarray(numpy.array(arrayimagenes[i]))
                 imagen.save(app.config['GIF_FOLDER1']+"img"+str(i)+".jpg")
-                imagencolorada=Image.fromarray(colorate(np_im2.tolist(),arrayimagenes[i]))
-                imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
+                #imagencolorada=Image.fromarray(numpy.array(colorate(np_imcolor.tolist(), arrayimagenes[i])))
+                #imagencolorada.save(app.config['GIF_FOLDER1_Colored']+"img"+str(i)+".jpg")
 
-            file2 = open("array2.txt", "a")
-            file2.write(str(np_im2))
-            file2.close()
+            #file2 = open("array2.txt", "a")
+            #file2.write(str(np_im2))
+            #file2.close()
 
             gif1 = generate_gif(app.config['GIF_FOLDER1'])
             gif2 = generate_gif(app.config['GIF_FOLDER2'])

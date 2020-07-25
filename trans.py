@@ -156,7 +156,7 @@ def get_matrix (vector_1, vector_2, matching):
     transition_blocks = []
     for match in matches:
         if match.tipo == 0:
-            print ("processing one to one")
+            #print ("processing one to one")
             start_block = match.matching[0].i
             final_block = match.matching[0].j
             scaled_size = blocks_2[final_block].j - blocks_2[final_block].i + 1
@@ -172,15 +172,15 @@ def get_matrix (vector_1, vector_2, matching):
             else:
                 direction = False
                 distance = 0
-            print ("start_index: " + str(start_index))
-            print ("end_index: " + str(end_index))
-            print ("scaled_size: " + str(scaled_size))
-            print ("direction: " + str(direction))
-            print ("distance: " + str(distance))
-            print ("final_position " + str(final_position))
+            #print ("start_index: " + str(start_index))
+            #print ("end_index: " + str(end_index))
+            #print ("scaled_size: " + str(scaled_size))
+            #print ("direction: " + str(direction))
+            #print ("distance: " + str(distance))
+            #print ("final_position " + str(final_position))
             transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         elif match.tipo == 1:
-            print ("processing division")
+            #print ("processing division")
             start_block = match.matching[0].i
             start_block_size = blocks_1[start_block].j - blocks_1[start_block].i + 1
             final_blocks = []
@@ -198,7 +198,7 @@ def get_matrix (vector_1, vector_2, matching):
                 proportion = scaled_size / total_size
                 start_block_portion_size = proportion * start_block_size
                 end_index = start_index + math.floor (start_block_portion_size)
-                print ("next block start: " + str(next_block_start))
+                #print ("next block start: " + str(next_block_start))
                 next_block_start = end_index + 1
                 if start_index > blocks_2[block].i:
                     direction = True
@@ -209,15 +209,15 @@ def get_matrix (vector_1, vector_2, matching):
                 else:
                     direction = False
                     distance = 0
-                print ("start_index: " + str(start_index))
-                print ("end_index: " + str(end_index))
-                print ("scaled_size: " + str(scaled_size))
-                print ("direction: " + str(direction))
-                print ("distance: " + str(distance))
-                print ("final_position " + str(final_position))
+                #print ("start_index: " + str(start_index))
+                #print ("end_index: " + str(end_index))
+                #print ("scaled_size: " + str(scaled_size))
+                #print ("direction: " + str(direction))
+                #print ("distance: " + str(distance))
+                #print ("final_position " + str(final_position))
                 transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
         else:
-            print ("processing agroupation")
+            #print ("processing agroupation")
             start_blocks = []
             final_block = match.matching[0].j
             final_block_size = blocks_2[final_block].j - blocks_2[final_block].i + 1
@@ -246,39 +246,39 @@ def get_matrix (vector_1, vector_2, matching):
                     distance = 0
                 if scaled_size == 0:
                     scaled_size = 1
-                print ("start_index: " + str(start_index))
-                print ("end_index: " + str(end_index))
-                print ("scaled_size: " + str(scaled_size))
-                print ("direction: " + str(direction))
-                print ("distance: " + str(distance))
-                print ("final_position " + str(final_position))
+                #print ("start_index: " + str(start_index))
+                #print ("end_index: " + str(end_index))
+                #print ("scaled_size: " + str(scaled_size))
+                #print ("direction: " + str(direction))
+                #print ("distance: " + str(distance))
+                #print ("final_position " + str(final_position))
                 transition_blocks.append (transformation_block (start_index, end_index, scaled_size, direction, distance, final_position, 0))
-    print (transition_blocks) 
+    #print (transition_blocks)
     for i in range (1, 6):
-        print ("=========================")
-        print ("TRANSITION " + str(i))
+        #print ("=========================")
+        #print ("TRANSITION " + str(i))
         for j in range (len (vector_1)):
             matrix[i].append (False)
         for block in transition_blocks:
-            print ("calculating block")
-            print (block)
+            #print ("calculating block")
+            #print (block)
             if (block.end_index - block.start_index + 1) > block.scaled_size:
-                print ("current bigger than final")
-                print ("end_index: " + str(block.end_index))
-                print ("start_index: " + str(block.start_index))
-                print ("current_traversed: " + str (block.current_traversed))
-                print ("scaled_size: " + str (block.scaled_size))
+                #print ("current bigger than final")
+                #print ("end_index: " + str(block.end_index))
+                #print ("start_index: " + str(block.start_index))
+                #print ("current_traversed: " + str (block.current_traversed))
+                #print ("scaled_size: " + str (block.scaled_size))
                 current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.scaled_size / 5))
             elif (block.end_index - block.start_index + 1) < block.scaled_size:
-                print ("current smaller than final")
+                #print ("current smaller than final")
                 current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size / 5))
-                print ("current bigger than final")
-                print ("end_index: " + str(block.end_index))
-                print ("start_index: " + str(block.start_index))
-                print ("current_traversed: " + str (block.current_traversed))
-                print ("scaled_size: " + str (block.scaled_size))
+                #print ("current bigger than final")
+                #print ("end_index: " + str(block.end_index))
+                #print ("start_index: " + str(block.start_index))
+                #print ("current_traversed: " + str (block.current_traversed))
+                #print ("scaled_size: " + str (block.scaled_size))
             else:
-                print ("current equal to final")
+                #print ("current equal to final")
                 current_size = block.scaled_size
             if block.distance != 0:
                 if block.direction == True:
@@ -287,32 +287,14 @@ def get_matrix (vector_1, vector_2, matching):
                     current_position = block.start_index + math.floor (block.current_traversed * (block.distance / 5))
             else:
                 current_position = block.start_index
-            print ("beggining transition")
-            print ("current position: " + str(current_position))
-            print ("current size: " + str(current_size))
+            #print ("beggining transition")
+            #print ("current position: " + str(current_position))
+            #print ("current size: " + str(current_size))
             for k in range (current_size):
                 if current_position + k < len (vector_1):
                     matrix[i][current_position + k] = True
             block.current_traversed += 1
-            print ("----------------------")
-        print ("=========================")
+            #print ("----------------------")
+        #print ("=========================")
      
     return matrix
-
-size = 16
-A = []
-B = []
-
-for i in range(size):
-    temp = []
-    A.append(temp)
-    B.append(temp)
-    for j in range(size):
-        A[i].append(random.randint(0, 1))
-        B[i].append(random.randint(0, 1))
-B.reverse()
-for i in range(size):
-    print(A[i])
-    print(B[i])
-
-generate_animation(A, B, greedy_trans(A, B))
