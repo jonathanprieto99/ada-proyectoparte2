@@ -28,18 +28,15 @@ def allowed_file(filename):
 
 def generate_gif(directory):
 
-    files = os.listdir(directory)
     array = []
 
-    for file in files:
-        if "gif" in file:
-            print("Gif file :"+file)
-        else:
-            img1 = Image.open(directory+file)
-            array.append(img1)
-            print("Image File: "+file)
+    for i in range(7):
+        filename = "img" + str(i) + ".jpg"
+        img = Image.open(directory+filename)
+        array.append(img)
+        print("Image File: "+filename)
 
-    gif = Image.new('RGB', (300, 300))
+    gif = Image.new('RGB', (200, 200))
     gif.save(directory+'out.gif', save_all=True, append_images=array, duration=1000, loop=0)
 
     return directory+'out.gif'
@@ -92,7 +89,7 @@ def upload_image():
             
                 arrayimagenes = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.greedy_trans(np_im.tolist(), np_im2.tolist()))
 
-                for i in range(1, 6):
+                for i in range(7):
                     imagen = Image.fromarray(numpy.array(arrayimagenes[i]))
                     imagen.save(app.config['GIF_FOLDER1'] + "img" + str(i) + ".jpg")
                 gif = generate_gif(app.config['GIF_FOLDER1'])
@@ -101,7 +98,7 @@ def upload_image():
 
                 arrayimagenes2 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans(np_im.tolist(), np_im2.tolist()))
 
-                for i in range(1, 6):
+                for i in range(7):
                     imagen = Image.fromarray(numpy.array(arrayimagenes2[i]))
                     imagen.save(app.config['GIF_FOLDER2'] + "img" + str(i) + ".jpg")
                 gif = generate_gif(app.config['GIF_FOLDER2'])
@@ -110,7 +107,7 @@ def upload_image():
 
                 arrayimagenes3 = trans.generate_animation(np_im.tolist(), np_im2.tolist(), trans.dp_trans_avg(np_im.tolist(), np_im2.tolist()))
 
-                for i in range(1, 6):
+                for i in range(7):
 
                     imagen = Image.fromarray(numpy.array(arrayimagenes3[i]))
                     imagen.save(app.config['GIF_FOLDER3'] + "img" + str(i) + ".jpg")

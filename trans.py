@@ -71,7 +71,9 @@ def greedy_matching (A, B):
     m = len (blocks_B) - 1 
 
     if n < 0 or m < 0:
+
         print ("Error: No hay bloques en uno de los vectores")
+        return result
     
     max_value = 0
     if n > m:
@@ -367,7 +369,7 @@ def get_matrix (vector_1, vector_2, matching):
     #print ("row")
     blocks_1 = get_blocks (vector_1)
     blocks_2 = get_blocks (vector_2)
-    if len (blocks_1) == 0 or len (blocks_2) == 0:
+    if len (blocks_1) == 0 or len (blocks_2) == 0 or len(matching.matching) == 0:
         return [vector_1, [], [], [], [], [], vector_2]
     matrix = []
     matrix.append (vector_1)
@@ -513,10 +515,12 @@ def get_matrix (vector_1, vector_2, matching):
                 #print ("current_traversed: " + str (block.current_traversed))
                 #print ("scaled_size: " + str (block.scaled_size))
                 #print ("current size growth: " + str (block.current_traversed * (block.end_index - block.start_index + 1 - block.scaled_size) / 5))
-                current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.end_index - block.start_index + 1 - block.scaled_size) / 5)
+                #current_size = (block.end_index - block.start_index + 1) - math.floor (block.current_traversed * (block.end_index - block.start_index + 1 - block.scaled_size) / 5)
+                current_size = (block.end_index - block.start_index + 1) - math.floor(block.current_traversed * (block.scaled_size / 5))
             elif (block.end_index - block.start_index + 1) < block.scaled_size:
                 #print ("current smaller than final")
-                current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size - block.end_index - block.start_index + 1) / 5)
+                #current_size = (block.end_index - block.start_index + 1) + math.floor (block.current_traversed * (block.scaled_size - block.end_index - block.start_index + 1) / 5)
+                current_size = (block.end_index - block.start_index + 1) + math.floor(block.current_traversed * (block.scaled_size / 5))
                 #print ("current bigger than final")
                 #print ("end_index: " + str(block.end_index))
                 #print ("start_index: " + str(block.start_index))
